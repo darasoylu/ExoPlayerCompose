@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.view.View
 import androidx.annotation.OptIn
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -65,6 +68,7 @@ fun MobilePlayerScreen(navController: NavController) {
     var maxProgress by remember { mutableStateOf(1F) }
     var formattedRemainingTime by remember { mutableStateOf("00:00") }
     var isPlayerReady by remember { mutableStateOf(false) }
+    var showController by remember { mutableStateOf(true) }
 
     DisposableEffect(Unit) {
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -110,6 +114,13 @@ fun MobilePlayerScreen(navController: NavController) {
         }
     }
 
+    if (showController) {
+        LaunchedEffect(Unit) {
+            delay(5000)
+            showController = false
+        }
+    }
+
     LaunchedEffect(Unit) {
         while (true) {
             if (player.isPlaying && player.duration > 0) {
@@ -121,7 +132,13 @@ fun MobilePlayerScreen(navController: NavController) {
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable {
+                showController = !showController
+            }
+    ) {
 
         AndroidView(
             factory = { context ->
@@ -134,13 +151,20 @@ fun MobilePlayerScreen(navController: NavController) {
         )
 
         if (isPlayerReady) {
-            CustomPlayerController(
-                navController = navController,
-                player = player,
-                progress = progress,
-                maxProgress = maxProgress,
-                formattedRemainingTime = formattedRemainingTime
-            )
+            AnimatedVisibility(
+                visible = showController,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                CustomPlayerController(
+                    navController = navController,
+                    player = player,
+                    progress = progress,
+                    maxProgress = maxProgress,
+                    formattedRemainingTime = formattedRemainingTime
+                )
+            }
+
         } else {
             CircularProgressIndicator(
                 color = Color.Red,
