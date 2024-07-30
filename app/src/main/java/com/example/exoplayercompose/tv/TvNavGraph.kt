@@ -1,17 +1,17 @@
 package com.example.exoplayercompose.tv
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.exoplayercompose.tv.TvRoutes.TV_HOME_SCREEN
+import com.example.exoplayercompose.tv.TvRoutes.TV_PLAYER_SCREEN
 import com.example.exoplayercompose.tv.screens.TvHomeScreen
+import com.example.exoplayercompose.tv.screens.TvPlayerScreen
 
 object TvRoutes {
     const val TV_HOME_SCREEN = "TV_HOME"
@@ -33,6 +33,9 @@ fun TvNavGraph() {
         ) {
             composable(TV_HOME_SCREEN) {
                 TvHomeScreen(navController)
+            }
+            composable(TV_PLAYER_SCREEN) {
+                TvPlayerScreen(navController)
             }
         }
     }
